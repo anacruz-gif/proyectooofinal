@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Monitoreo MPU6050 - Firebase</title>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+    // 🔥 CONFIGURACIÓN FIREBASE
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_LjsytiBVljX3JclwjA7JbBwxTR-_a1k",
+      authDomain: "proyecto-control-56808.firebaseapp.com",
+      databaseURL: "https://proyecto-control-56808-default-rtdb.firebaseio.com/",
+      projectId: "proyecto-control-56808",
+      storageBucket: "proyecto-control-56808.appspot.com",
+      messagingSenderId: "000000000000",
+      appId: "1:000000000000:web:xxxxxxxx"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Referencia a los datos
+    const mpuRef = ref(database, "mpu6050");
+
+    // Escuchar cambios en tiempo real
+    onValue(mpuRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        document.getElementById("accx").innerText = data.AccX.toFixed(3);
+        document.getElementById("accy").innerText = data.AccY.toFixed(3);
+        document.getElementById("accz").innerText = data.AccZ.toFixed(3);
+        document.getElementById("mag").innerText  = data.Magnitud.toFixed(3);
+      }
+    });
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 30px;
+      color: #38bdf8;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 20px;
+      width: 200px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(56,189,248,0.5);
+    }
+
+    .value {
+      font-size: 28px;
+      color: #22d3ee;
+      margin-top: 10px;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>📊 Monitoreo MPU6050</h1>
+  <p>Datos en tiempo real desde Firebase</p>
+
+  <div class="container">
+    <div class="card">
+      <h3>Acc X</h3>
+      <div class="value" id="accx">0.000</div>
+    </div>
+
+    <div class="card">
+      <h3>Acc Y</h3>
+      <div class="value" id="accy">0.000</div>
+    </div>
+
+    <div class="card">
+      <h3>Acc Z</h3>
+      <div class="value" id="accz">0.000</div>
+    </div>
+
+    <div class="card">
+      <h3>Magnitud</h3>
+      <div class="value" id="mag">0.000</div>
+    </div>
+  </div>
+
+  <footer>
+    Proyecto IoT · MPU6050 + ESP32 + Firebase
+  </footer>
+
+</body>
+</html>
